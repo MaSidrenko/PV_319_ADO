@@ -17,9 +17,50 @@ namespace Academy
 		Connector connector;
 		Dictionary<string, int> d_directions;
 
+		DataGridView[] tables;
+		Query[] queries = new Query[]
+		{
+			new Query
+				(
+					"FORMATMESSAGE(N'%s %s %s', last_name, first_name, middle_name) AS N'ФИО Студента', birth_date, group_name, direction_name","Students, Groups, Directions", "[group]=group_id AND direction=direction_id"
+				),
+			new Query
+				(
+					"group_name,dbo.GetLearningDays(group_name) AS weekdays, start_time, direction_name", "Groups, Directions", "direction=direction_id"
+				),
+			new Query
+				(
+					"direction_name, COUNT(DISTINCT group_id) AS N'Количество групп', COUNT(DISTINCT stud_id) AS N'Количество студентов'", "Students  RIGHT JOIN Groups ON ([group]=group_id) RIGHT JOIN Directions ON (direction=direction_id)", "", "direction_name"
+				),
+			new Query
+				(
+					"*", "Disciplines"
+				),
+			new Query
+				(
+					"*", "Teachers"
+				)
+		};
+		string[] satusMessages = new string[]
+		{
+			$"Количество студентов: " /*+ (dgvStudents.RowCount - 1)*/,
+			$"Количество групп: ",
+			$"Количество направлений: ",
+			$"Количество дисциплин: " ,
+			$"Количество преподавателей: " 
+		};
+
 		public Main()
 		{
 			InitializeComponent();
+			tables = new DataGridView[]
+			{
+				dgvStudents,
+				dgvGroups,
+				dgvDirections,
+				dgvDisciplines,
+				dgvTeachers
+			};
 
 			connector = new Connector
 				(
@@ -31,14 +72,14 @@ namespace Academy
 			dgvStudents.DataSource = connector.Select("FORMATMESSAGE(N'%s %s %s', last_name, first_name, middle_name) AS N'ФИО Студента', birth_date, group_name, direction_name",
 																	"Students, Groups, Directions"
 																	, "[group]=group_id AND direction=direction_id");
-			toolStripStatusLabelCount.Text = "Количество студентов: " + (dgvStudents.RowCount - 1);
+			toolStripStatusLabelCount.Text = "Количество студентов: " + CountRecordsInDGV(dgvStudents);
 
 		}
 
 
 		private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Console.WriteLine(tabControl.SelectedIndex);
+			/*Console.WriteLine(tabControl.SelectedIndex);
 			switch (tabControl.SelectedIndex)
 			{
 				case 0:
@@ -74,8 +115,11 @@ namespace Academy
 						toolStripStatusLabelCount.Text = "Количество преподавателей: " + (dgvTeachers.RowCount - 1);
 					}
 					break;
-			}
-
+			}*/
+			int i = tabControl.SelectedIndex;
+			Query query = queries[i];
+			tables[i].DataSource = connector.Select(query.Columns, query.Tables, query.Condition, query.Group_by);
+			toolStripStatusLabelCount.Text = satusMessages[i] + CountRecordsInDGV(tables[i]);
 		}
 
 		private void cbGroupsDirection_SelectedIndexChanged(object sender, EventArgs e)
