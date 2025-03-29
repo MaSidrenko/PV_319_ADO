@@ -32,7 +32,7 @@ namespace Academy
 																	"Students, Groups, Directions"
 																	, "[group]=group_id AND direction=direction_id");
 			toolStripStatusLabelCount.Text = "Количество студентов: " + (dgvStudents.RowCount - 1);
-					
+
 		}
 
 
@@ -43,16 +43,16 @@ namespace Academy
 			{
 				case 0:
 					{
-						dgvStudents.DataSource = connector.Select("FORMATMESSAGE(N'%s %s %s', last_name, first_name, middle_name) AS N'ФИО Студента', birth_date, group_name, direction_name", 
+						dgvStudents.DataSource = connector.Select("FORMATMESSAGE(N'%s %s %s', last_name, first_name, middle_name) AS N'ФИО Студента', birth_date, group_name, direction_name",
 																	"Students, Groups, Directions"
-																	,"[group]=group_id AND direction=direction_id");
+																	, "[group]=group_id AND direction=direction_id");
 						toolStripStatusLabelCount.Text = "Количество студентов: " + (dgvStudents.RowCount - 1);
 					}
 					break;
 				case 1:
 					{
 						dgvGroups.DataSource = connector.Select("group_name,dbo.GetLearningDays(group_name) AS weekdays, start_time, direction_name", "Groups, Directions", "direction=direction_id");
-						toolStripStatusLabelCount.Text = "Количество групп: " + (dgvGroups.RowCount - 1);
+						toolStripStatusLabelCount.Text = "Количество групп: " + CountRecordsInDGV(dgvGroups);
 					}
 					break;
 				case 2:
@@ -66,7 +66,7 @@ namespace Academy
 					{
 						dgvDisciplines.DataSource = connector.Select("*", "Disciplines");
 						toolStripStatusLabelCount.Text = "Количество дисциплин: " + (dgvDisciplines.RowCount - 1);
- 					}
+					}
 					break;
 				case 4:
 					{
@@ -81,6 +81,11 @@ namespace Academy
 		private void cbGroupsDirection_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			dgvGroups.DataSource = connector.Select("group_name,dbo.GetLearningDays(group_name) AS weekdays, start_time, direction_name", "Groups, Directions", $"direction=direction_id AND direction=N'{d_directions[cbGroupsDirection.SelectedItem.ToString()]}'");
+			toolStripStatusLabelCount.Text = "Количество групп: " + /*(dgvGroups.RowCount - 1)*/CountRecordsInDGV(dgvGroups);
+		}
+		int CountRecordsInDGV(DataGridView dgv)
+		{
+			return dgv.RowCount == 0 ? 0 : dgv.RowCount - 1;
 		}
 	}
 }
