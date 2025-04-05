@@ -11,7 +11,7 @@ namespace AcademyDataSet
 {
 	internal class Connector
 	{
-		const int PADDING = 40;
+		const int PADDING = 45;
 		readonly string CONNECTION_STRING;
 		SqlConnection conn;
 		public Connector(string connectionString)
@@ -88,4 +88,3 @@ namespace AcademyDataSet
 		public static extern bool FreeConsole();
 	}
 }
-
