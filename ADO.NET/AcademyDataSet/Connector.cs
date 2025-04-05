@@ -11,6 +11,7 @@ namespace AcademyDataSet
 {
 	internal class Connector
 	{
+		const int PADDING = 40;
 		readonly string CONNECTION_STRING;
 		SqlConnection conn;
 		public Connector(string connectionString)
@@ -39,26 +40,32 @@ namespace AcademyDataSet
 
 				dataSet.Load(reader, LoadOption.OverwriteChanges, dataTable);
 
-				Console.WriteLine("========================================================================================================================");
-				foreach (DataColumn columns in dataTable.Columns)
-				{
-					Console.Write((columns).ToString().PadRight(40));
-				}
-				Console.WriteLine();
-				Console.WriteLine("========================================================================================================================");
-				foreach (DataRow row in dataTable.Rows)
-				{
-					foreach (KeyValuePair<int, string> rows in table_columns)
-					{
-						Console.Write($"{row[rows.Value]}".PadRight(40));
-					}
-					Console.WriteLine();
-				}
+				PrintTable(dataTable, table_columns);
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.Message);
 			}
+		}
+		private void PrintTable(DataTable dataTable, Dictionary<int, string> table_columns)
+		{
+			Console.WriteLine("========================================================================================================================");
+			foreach (DataColumn columns in dataTable.Columns)
+			{
+				Console.Write((columns).ToString().PadRight(PADDING));
+			}
+			Console.WriteLine();
+			Console.WriteLine("========================================================================================================================");
+			foreach (DataRow row in dataTable.Rows)
+			{
+				foreach(KeyValuePair<int, string> rows in table_columns)
+				{
+					Console.Write($"{row[rows.Value]}".PadRight(PADDING));
+				}
+				Console.WriteLine();
+			}
+			Console.WriteLine("========================================================================================================================");
+			Console.WriteLine();
 		}
 		private DataTableReader GetReader(string cmd, string name)
 		{

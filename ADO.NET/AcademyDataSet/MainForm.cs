@@ -21,10 +21,10 @@ namespace AcademyDataSet
 		Dictionary<int, string> d_groups = new Dictionary<int, string>
 	{
 		//{1, "group_id"},
-		{1, "Группа"},
-		{2, "Дисциплина"},
-		{3, "Учебные дни" },
-		{4, "Время начала занятий" }
+		{1, "Группа"},					//group_name
+		{2, "Дисциплина"},				//discipline_name
+		{3, "Учебные дни" },			//weekdats
+		{4, "Время начала занятий" }	//start_time
 	};
 		Dictionary<int, string> d_directions = new Dictionary<int, string>
 	{
@@ -37,10 +37,8 @@ namespace AcademyDataSet
 			AllocConsole();
 			CONN_STR = ConfigurationManager.ConnectionStrings["PV_319_IMPORT"].ConnectionString;
 			Connector connector = new Connector(CONN_STR);
-			connector.LoadTable("SELECT group_name AS N'Группа', direction_name AS N'Дисциплина', weekdats AS N'Учебные дни', start_time AS N'Время начала занятий' FROM Groups, Directions WHERE direction=direction_id", "Groups", d_groups);
-			Console.WriteLine("\n|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|\n");
+			connector.LoadTable("SELECT group_name AS N'Группа', direction_name AS N'Дисциплина', dbo.GetLearningDays(group_name) AS N'Учебные дни', start_time AS N'Время начала занятий' FROM Groups, Directions WHERE direction=direction_id", "Groups", d_groups);
 			connector.LoadTable("SELECT * FROM Directions", "Directions", d_directions);
-			Console.WriteLine("\n|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|\n");
 		}
 		
 		[DllImport("kernel32.dll")]
