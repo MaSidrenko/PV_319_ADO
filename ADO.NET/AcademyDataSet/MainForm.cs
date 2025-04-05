@@ -20,29 +20,83 @@ namespace AcademyDataSet
 		readonly string CONN_STR = "";
 		DataSet GroupsRelatedData = null;
 		SqlConnection conn = null;
+		List<string> tables;
 		public MainForm()
 		{
 			InitializeComponent();
 			AllocConsole();
 			CONN_STR = ConfigurationManager.ConnectionStrings["PV_319_IMPORT"].ConnectionString;
 			conn = new SqlConnection(CONN_STR);
-			LoadGroupsRelatedData();
+
+			tables = new List<string>();
+
+			GroupsRelatedData = new DataSet(nameof(GroupsRelatedData));
+			//LoadGroupsRelatedData();
+			Check();
+			
+
+			Type type = typeof(decimal);
+			Console.WriteLine(type.Name);
 		}
-		
+		public void AddTable(string table_name, string columns)
+		{
+			string[] separated_columns = columns.Split(',');
+			GroupsRelatedData.Tables.Add(table_name);
+			for(int i = 0; i < separated_columns.Length; i++)
+			{
+				GroupsRelatedData.Tables[table_name].Columns.Add(separated_columns[i]);
+			}
+			GroupsRelatedData.Tables[table_name].PrimaryKey = new DataColumn[]
+				{ GroupsRelatedData.Tables[table_name].Columns[separated_columns[0]] };
+			tables.Add($"{table_name},{columns}");
+		}
+		public void AddRelation(string name,string child, string parent)
+		{
+			GroupsRelatedData.Relations.Add
+				(
+				name,
+				GroupsRelatedData.Tables[parent.Split(',')[0]].Columns[parent.Split(',')[1]],
+				GroupsRelatedData.Tables[child.Split(',')[0]].Columns[child.Split(',')[1]]
+				);
+		}
+		public void Load()
+		{
+			string[] tables = this.tables.ToArray();
+			for (int i = 0; i < tables.Length; i++)
+			{
+				string cmd = $"SELECT * FROM {tables[i].Split(',')[0]}";
+				SqlDataAdapter adapter = new SqlDataAdapter(cmd, conn);
+				adapter.Fill(GroupsRelatedData.Tables[tables[i].Split(',')[0]]);
+			}
+		}
+		public void Print(string table_name)
+		{
+			Console.WriteLine("\n|==============================================================================|\n");
+			foreach (DataRow row in GroupsRelatedData.Tables[table_name].Rows)
+			{
+				for (int i = 0; i < row.ItemArray.Length; i++)
+				{
+					Console.Write(row[i].ToString() + "\t");
+				}
+				Console.WriteLine();
+			}
+			Console.WriteLine("\n|==============================================================================|\n");
+		}
 		void LoadGroupsRelatedData()
 		{
 			Console.WriteLine(nameof(GroupsRelatedData));
-			GroupsRelatedData = new DataSet(nameof(GroupsRelatedData));
-
-			const string dsTabe_Directions = "Directions";
+			
+			const string dsTable_Directions = "Directions";
 			const string dst_col_direction_id = "direction_id";
 			const string dst_col_direction_name = "direction_name"
 				;
-			GroupsRelatedData.Tables.Add(dsTabe_Directions);
-			GroupsRelatedData.Tables[dsTabe_Directions].Columns.Add(dst_col_direction_id, typeof(byte));
-			GroupsRelatedData.Tables[dsTabe_Directions].Columns.Add(dst_col_direction_name, typeof(string));
-			GroupsRelatedData.Tables[dsTabe_Directions].PrimaryKey = new DataColumn[]
-				{ GroupsRelatedData.Tables[dsTabe_Directions].Columns[dst_col_direction_id] };
+			GroupsRelatedData.Tables.Add(dsTable_Directions);
+			GroupsRelatedData.Tables[dsTable_Directions].Columns.Add(dst_col_direction_id, typeof(byte));
+			GroupsRelatedData.Tables[dsTable_Directions].Columns.Add(dst_col_direction_name, typeof(String));
+
+
+			GroupsRelatedData.Tables[dsTable_Directions].PrimaryKey = new DataColumn[]
+				{ GroupsRelatedData.Tables[dsTable_Directions].Columns[dst_col_direction_id] };
 
 			const string dsTable_Groups = "Groups";
 			const string dst_col_group_id = "group_id";
@@ -70,12 +124,12 @@ namespace AcademyDataSet
 			SqlDataAdapter groupsAdapter = new SqlDataAdapter(groups_cmd, conn);
 
 			conn.Open();
-			directionsAdapter.Fill(GroupsRelatedData.Tables[dsTabe_Directions]);
+			directionsAdapter.Fill(GroupsRelatedData.Tables[dsTable_Directions]);
 			groupsAdapter.Fill(GroupsRelatedData.Tables[dsTable_Groups]);
 			conn.Close();
 
 
-			foreach (DataRow row in GroupsRelatedData.Tables[dsTabe_Directions].Rows)
+			foreach (DataRow row in GroupsRelatedData.Tables[dsTable_Directions].Rows)
 			{
 				Console.WriteLine($"{row[dst_col_direction_id]}\t{row[dst_col_direction_name]}");
 			}
@@ -84,6 +138,16 @@ namespace AcademyDataSet
 			{
 				Console.WriteLine($"{row[dst_col_group_id]}\t{row[dst_col_group_name]}\t{row.GetParentRow(dsRealtion_Groups_Directions)[dst_col_direction_name]}");
 			}
+		}
+		public void Check()
+		{
+			AddTable("Directions","direction_id,direction_name");
+			AddTable("Groups", "group_id,group_name,direction");
+
+			AddRelation("GroupsDirections", "Groups,direction","Directions,direction_id");
+			Load();
+			Print("Directions");
+			Print("Groups");
 		}
 		[DllImport("kernel32.dll")]
 		public static extern bool AllocConsole();
