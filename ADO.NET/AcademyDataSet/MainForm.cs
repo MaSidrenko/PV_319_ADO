@@ -33,10 +33,6 @@ namespace AcademyDataSet
 			GroupsRelatedData = new DataSet(nameof(GroupsRelatedData));
 			//LoadGroupsRelatedData();
 			Check();
-			
-
-			Type type = typeof(decimal);
-			Console.WriteLine(type.Name);
 		}
 		public void AddTable(string table_name, string columns)
 		{
@@ -46,9 +42,11 @@ namespace AcademyDataSet
 			{
 				GroupsRelatedData.Tables[table_name].Columns.Add(separated_columns[i]);
 			}
+		
 			GroupsRelatedData.Tables[table_name].PrimaryKey = new DataColumn[]
 				{ GroupsRelatedData.Tables[table_name].Columns[separated_columns[0]] };
 			tables.Add($"{table_name},{columns}");
+
 		}
 		public void AddRelation(string name,string child, string parent)
 		{
@@ -72,6 +70,7 @@ namespace AcademyDataSet
 		public void Print(string table_name)
 		{
 			Console.WriteLine("\n|==============================================================================|\n");
+			Console.WriteLine(hasParents(table_name));
 			foreach (DataRow row in GroupsRelatedData.Tables[table_name].Rows)
 			{
 				for (int i = 0; i < row.ItemArray.Length; i++)
@@ -81,6 +80,15 @@ namespace AcademyDataSet
 				Console.WriteLine();
 			}
 			Console.WriteLine("\n|==============================================================================|\n");
+		}
+		bool hasParents(string table_name)
+		{
+			bool yes = false;
+			for(int i = 0; i < GroupsRelatedData.Relations.Count;i++)
+			{
+				if (GroupsRelatedData.Relations[i].ChildTable.TableName == table_name) return true;
+			}
+			return yes;
 		}
 		void LoadGroupsRelatedData()
 		{
