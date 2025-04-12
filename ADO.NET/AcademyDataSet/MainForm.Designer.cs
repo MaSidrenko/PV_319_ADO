@@ -28,8 +28,11 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.cbGroups = new System.Windows.Forms.ComboBox();
 			this.cbDirections = new System.Windows.Forms.ComboBox();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.btnRefresh = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// cbGroups
@@ -51,11 +54,27 @@
 			this.cbDirections.TabIndex = 1;
 			this.cbDirections.SelectedIndexChanged += new System.EventHandler(this.cbDirections_SelectedIndexChanged);
 			// 
+			// timer1
+			// 
+			this.timer1.Enabled = true;
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+			// 
+			// btnRefresh
+			// 
+			this.btnRefresh.Location = new System.Drawing.Point(713, 415);
+			this.btnRefresh.Name = "btnRefresh";
+			this.btnRefresh.Size = new System.Drawing.Size(75, 23);
+			this.btnRefresh.TabIndex = 2;
+			this.btnRefresh.Text = "Refresh";
+			this.btnRefresh.UseVisualStyleBackColor = true;
+			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btnRefresh);
 			this.Controls.Add(this.cbDirections);
 			this.Controls.Add(this.cbGroups);
 			this.Name = "MainForm";
@@ -68,6 +87,8 @@
 
 		private System.Windows.Forms.ComboBox cbGroups;
 		private System.Windows.Forms.ComboBox cbDirections;
+		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Button btnRefresh;
 	}
 }
 

@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Data;
 using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Configuration;
 
-namespace AcademyDataSet
+
+namespace Cache
 {
-	internal class Cache
+	public class Cache
 	{
 		readonly string CONN_STR = "";
 		public DataSet Set { get; set; }
@@ -30,7 +33,7 @@ namespace AcademyDataSet
 			Set.Tables.Add(table_name);
 			for (int i = 0; i < separated_columns.Length; i++)
 			{
-				Set.Tables[table_name].Columns.Add(separated_columns[i]);
+				Set.Tables[table_name]?.Columns.Add(separated_columns[i]);
 			}
 
 			Set.Tables[table_name].PrimaryKey = new DataColumn[]
@@ -101,7 +104,12 @@ namespace AcademyDataSet
 		}
 		bool hasParents(string table_name)
 		{
-			return Set.Tables[table_name].ParentRelations.Count > 0;
+			return Set.Tables[table_name]?.ParentRelations.Count > 0;
+		}
+		public void CleareCahce()
+		{
+			Set.Clear();
+
 		}
 		public void Check()
 		{
