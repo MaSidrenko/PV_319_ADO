@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using System.Configuration;
+using Connector;
 
 namespace Academy
 {
 	public partial class Main : Form
 	{
-		Connector connector;
+		Connector.Connector connector;
 		Dictionary<string, int> d_directions;
 		Dictionary<string, int> d_groups;
 
@@ -65,7 +66,7 @@ namespace Academy
 			};
 
 
-			connector = new Connector
+			connector = new Connector.Connector
 				(
 					ConfigurationManager.ConnectionStrings["PV_319_Import"].ConnectionString
 				);

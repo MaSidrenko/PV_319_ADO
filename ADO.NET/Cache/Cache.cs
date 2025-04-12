@@ -109,7 +109,6 @@ namespace Cache
 		public void CleareCahce()
 		{
 			Set.Clear();
-
 		}
 		public void Check()
 		{

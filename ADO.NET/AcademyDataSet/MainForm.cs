@@ -20,7 +20,6 @@ namespace AcademyDataSet
 {
 	public partial class MainForm : Form
 	{
-		
 		Cache.Cache GroupsRelatedData;
 		DateTime timer;
 		bool isNeedRefresh = false;
@@ -63,12 +62,11 @@ namespace AcademyDataSet
 		{
 			DateTime RefreshTimerCache = new DateTime();
 			RefreshTimerCache = RefreshTimerCache.AddTicks(DateTime.Now.Ticks - timer.Ticks);
-			Console.WriteLine(RefreshTimerCache.ToString());
-			if(RefreshTimerCache.Second == 5 || isNeedRefresh)
+			if(RefreshTimerCache.Second == 1 || isNeedRefresh)
 			{
 				isNeedRefresh = false;
-				//MessageBox.Show("Test!");
-				//GroupsRelatedData.CleareCahce();
+				GroupsRelatedData.CleareCahce();
+				GroupsRelatedData.Load();
 			}
 		}
 

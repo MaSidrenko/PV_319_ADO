@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcademyDataSet", "AcademyDa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cache", "Cache\Cache.csproj", "{3F4FB655-E0C0-4C1A-B4DD-11201E4A0553}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connector", "Connector\Connector.csproj", "{45BBACF1-835C-46E1-B548-1B89871AEE46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{3F4FB655-E0C0-4C1A-B4DD-11201E4A0553}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F4FB655-E0C0-4C1A-B4DD-11201E4A0553}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F4FB655-E0C0-4C1A-B4DD-11201E4A0553}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45BBACF1-835C-46E1-B548-1B89871AEE46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45BBACF1-835C-46E1-B548-1B89871AEE46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45BBACF1-835C-46E1-B548-1B89871AEE46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45BBACF1-835C-46E1-B548-1B89871AEE46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
