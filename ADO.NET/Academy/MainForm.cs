@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace Academy
 {
-	public partial class Main : Form
+	public partial class MainForm : Form
 	{
 		Connector.Connector connector;
 		public Dictionary<string, int> d_directions;
@@ -54,7 +54,7 @@ namespace Academy
 			$"Количество преподавателей: "
 		};
 
-		public Main()
+		public MainForm()
 		{
 			InitializeComponent();
 			tables = new DataGridView[]
@@ -150,34 +150,36 @@ namespace Academy
 		{
 			return dgv.RowCount == 0 ? 0 : dgv.RowCount - 1;
 		}
-		private void cbDirection_SelectedIndexChanged(object sender, EventArgs e)
+		private void cb_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			string cb_name = (sender as ComboBox).Name;
 			Console.WriteLine(cb_name);
 			int last_capitalIndex = Array.FindLastIndex<char>(cb_name.ToCharArray(), Char.IsUpper);
-			string cb_suffix = cb_name.Substring(last_capitalIndex, cb_name.Length-last_capitalIndex);
+			string cb_suffix = cb_name.Substring(last_capitalIndex, cb_name.Length - last_capitalIndex);
 			Console.WriteLine(cb_suffix);
 			int i = (sender as ComboBox).SelectedIndex;
 
 			string dictionary_name = $"d_{cb_suffix.ToLower()}s";
 			Dictionary<string, int> dictionary = this.GetType().GetField(dictionary_name).GetValue(this) as Dictionary<string, int>;
-			
+
 			d_groups = connector.GetDictionary("group_id, group_name",
 				"Groups",
-				i == 0 ? "" : $"{cb_suffix.ToLower()}={dictionary[(sender as ComboBox).SelectedItem.ToString()]}");
+				i == 0 ? "" : $"[{cb_suffix.ToLower()}]={dictionary[(sender as ComboBox).SelectedItem.ToString()]}");
 			cbStudentsGroup.Items.Clear();
 			cbStudentsGroup.Items.AddRange(d_groups.Select(g => g.Key).ToArray());
 			Query query = new Query(queries[tabControl.SelectedIndex]);
-			string condition = i == 0 || (sender as ComboBox).SelectedItem == null ? "" : $"{cb_suffix.ToLower()}={dictionary[$"{(sender as ComboBox).SelectedItem}"]}";
-			if(query.Condition == "")
+			string condition = i <= 0 || (sender as ComboBox).SelectedItem == null ? "" : $"[{cb_suffix.ToLower()}]={dictionary[$"{(sender as ComboBox).SelectedItem}"]}";
+			if (query.Condition == "")
 			{
 				query.Condition = condition;
 			}
-			else if(condition != "")
+			else if (condition != "")
 			{
 				query.Condition += $" AND {condition}";
 			}
-				LoadPage(tabControl.SelectedIndex, query);
+			LoadPage(tabControl.SelectedIndex, query);
 		}
+
+	
 	}
 }
