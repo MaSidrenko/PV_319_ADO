@@ -12,6 +12,8 @@ using System.Configuration;
 using Connector;
 using System.Text.RegularExpressions;
 
+using Connector;
+
 namespace Academy
 {
 	public partial class MainForm : Form
